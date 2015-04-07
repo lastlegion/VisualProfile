@@ -1,0 +1,50 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.node {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  //line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+  opacity: 0.9
+}
+.node:hover  {
+    opacity: 1;
+    color: #000
+}
+.heading{
+    font-size: 20px;
+    margin: 10px
+}
+.heading .nonh{
+    margin: 16px;
+    //font-size: 12px;
+    position: relative;
+    top: 20%;
+}
+a{
+    text-decoration: none;
+    color: #222;
+}
