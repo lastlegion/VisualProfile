@@ -29,8 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
-
-var client = github.client("<your_key>");
+console.log(process.env["GITHUB_TOKEN"])
+var client = github.client(process.env["GITHUB_TOKEN"]);
 var ghme = client.me();
 app.get("/repos", function(req, res){
     ghme.repos(1,100, function(err, body, headers){
