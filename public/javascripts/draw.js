@@ -10,9 +10,9 @@ var color = d3.scale.ordinal().domain([0,10]).range(colorbrewer.Pastel1[9]);
 
 d3.json("/repos", function(err, data){
     console.log(data)
-var margin = {top: 40, right: 10, bottom: 10, left: 10},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 20, right: 10, bottom: 10, left: 10},
+    width = 1024 - margin.left - margin.right,
+    height = 570 - margin.top - margin.bottom;
 
 var treemap = d3.layout.treemap()
     .size([width, height])

@@ -7,13 +7,12 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var github = require("octonode");
 
-var client = github.client();
-
-console.log("running")
 
 var app = express();
+ 
+
+var request = require('superagent'); 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,34 +27,63 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+var apiGate=  "https://api.github.com"
+var out = {"name": "repos", "children": []}
+var stars = []
 
-console.log(process.env["GITHUB_TOKEN"])
-var client = github.client(process.env["GITHUB_TOKEN"]);
-var ghme = client.me();
-app.get("/repos", function(req, res){
-    ghme.repos(1,100, function(err, body, headers){
-        //console.log(body)
-        console.log(headers)
-        var repos = body;
-        var out = {"name": "repos", "children": []}
-        var stars = []
-        for(i in repos){
-            var repo = repos[i];
-            if(repo.stargazers_count > 0){
-                var r = {}
-                r.stargazers_count = repo.stargazers_count
-                r.description = repo.description;
-                r.name = repo.name
-                r.url = repo.html_url
-                stars.push(r)
+app.get("/repos", function(req, resp){
+var out = {"name": "repos", "children": []}
+var stars = []
+
+    function getAllRepos(url){
+        console.log(apiGate+url)
+        request.get(apiGate+url)
+            .set("Authorization", "token "+process.env["GITHUB_TOKEN"])
+        .end(function(err, res){
+            var headers = res.headers
+            var body = res.body
+            //console.log(body)
+            console.log(headers)
+            var repos = body
+            for(var i in repos){
+                var repo = repos[i];
+                //console.log(repo)
+                if(repo.stargazers_count > 0){
+                    var r = {}
+                    r.stargazers_count = repo.stargazers_count
+                    r.description = repo.description;
+                    r.name = repo.name
+                    console.log(r.name)
+                    r.url = repo.html_url
+                    stars.push(r)
+                }
+                
             }
-            
-        }
-        console.log(body)
-     
-        out.children = stars
-        res.send(out)
-    })
+            if(headers){
+                console.log(headers.link)    
+                link = headers.link
+                //console.log(nl)
+                hasnext = (/rel=\"next\"/i).test(link)
+                hasprev = (/rel=\"next\"/).test(link)
+                console.log(hasnext)
+                if(hasnext){
+                var link = headers['link']
+                var nl = link.split(";")[0]
+                nl = nl.split(",")[0].substr(apiGate.length+1,nl.length-apiGate.length-2)
+                    getAllRepos(nl)
+                } else{     
+                       out.children = stars
+                       resp.send(out)
+                }   
+            }
+        })
+
+
+    }
+    console.log("running...")
+    var url ="/users/lastlegion/repos"
+    getAllRepos(url)
+
 })
 app.use('/users', users);
 
