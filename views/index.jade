@@ -1,5 +1,14 @@
 extends layout
 block content
-    h1 Ganesh's popular repositories on Github
-    div(id="display")
-        
+    div(class="container")
+        div(class="row")
+            div(class="col")
+                h1 Github repo map
+            div(class="col")
+                form(class="form")
+                    input(type="text" placeholder="username" class="input")
+                    button(type="button" class="btn btn-success" value="Success") Go 
+
+        div(class="row")
+            div(id="display")
+            

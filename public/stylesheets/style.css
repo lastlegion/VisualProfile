@@ -1,11 +1,10 @@
 body {
-  padding: 50px;
+  padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  //text-align: center;
+  margin:0 auto;
 }
 
-a {
-  color: #00B7FF;
-}
 
 
 body {
@@ -19,6 +18,10 @@ form {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+h1{
+  padding:0px;
+  margin: 0;
 }
 
 .node {
@@ -38,13 +41,37 @@ form {
     font-size: 20px;
     margin: 10px
 }
+h1{
+  margin: 0
+}
 .heading .nonh{
     margin: 16px;
     //font-size: 12px;
     position: relative;
     top: 20%;
 }
-a{
+
+a,  a.node, div.heading a{
     text-decoration: none;
     color: #222;
+}
+
+.form{
+  margin-top: 45px;
+  margin-left: 100px;
+  float: left;
+}
+.form input, .form button{
+  height: 38px;
+  padding: 2px;
+  margin: 3px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}
+.form button{
+  padding: 3px 12px;
+}
+#display{
+  margin: 0, auto;
+  width: 1100px;
 }
