@@ -31,61 +31,71 @@ var apiGate=  "https://api.github.com"
 var out = {"name": "repos", "children": []}
 var stars = []
 
-app.get("/repos", function(req, resp){
-var out = {"name": "repos", "children": []}
-var stars = []
-
-    function getAllRepos(url){
-        console.log(apiGate+url)
-        request.get(apiGate+url)
-            .set("Authorization", "token "+process.env["GITHUB_TOKEN"])
-        .end(function(err, res){
-            var headers = res.headers
-            var body = res.body
-            //console.log(body)
-            console.log(headers)
-            var repos = body
-            for(var i in repos){
-                var repo = repos[i];
-                //console.log(repo)
-                if(repo.stargazers_count > 0){
-                    var r = {}
-                    r.stargazers_count = repo.stargazers_count
-                    r.description = repo.description;
-                    r.name = repo.name
-                    console.log(r.name)
-                    r.url = repo.html_url
-                    stars.push(r)
-                }
-                
-            }
-            if(headers){
-                console.log(headers.link)    
-                link = headers.link
-                //console.log(nl)
-                hasnext = (/rel=\"next\"/i).test(link)
-                hasprev = (/rel=\"next\"/).test(link)
-                console.log(hasnext)
-                if(hasnext){
-                var link = headers['link']
-                var nl = link.split(";")[0]
-                nl = nl.split(",")[0].substr(apiGate.length+1,nl.length-apiGate.length-2)
-                    getAllRepos(nl)
-                } else{     
-                       out.children = stars
-                       resp.send(out)
-                }   
-            }
-        })
 
 
-    }
+app.get("/repos/", function(req, response){
+    var out = {"name": "repos", "children": []}
+    var stars = []
     console.log("running...")
     var url ="/users/lastlegion/repos"
-    getAllRepos(url)
+    getAllRepos(url, response)
 
 })
 app.use('/users', users);
+
+app.use("/repos/:user",function(req,response){
+    var out = {"name": "repos", "children": []}
+    var stars = []
+    console.log("running...")
+    var user  = req.params.user
+    var url ="/users/"+user+"/repos";
+
+function getAllRepos(url){
+
+    request.get(apiGate+url)
+        .set("Authorization", "token "+process.env["GITHUB_TOKEN"])
+    .end(function(err, res){
+        var headers = res.headers
+        var body = res.body
+        //console.log(body)
+        var repos = body
+        for(var i in repos){
+            var repo = repos[i];
+            //console.log(repo)
+            if(repo.stargazers_count > 0){
+                var r = {}
+                r.stargazers_count = repo.stargazers_count
+                r.description = repo.description;
+                r.name = repo.name
+                r.url = repo.html_url
+                stars.push(r)
+            }
+            
+        }
+        if(headers){ 
+            link = headers.link
+            //console.log(nl)
+            hasnext = (/rel=\"next\"/i).test(link)
+            hasprev = (/rel=\"next\"/).test(link)
+            
+            if(hasnext){
+            var link = headers['link']
+            var nl = link.split(";")[0]
+            nl = nl.split(",")[0].substr(apiGate.length+1,nl.length-apiGate.length-2)
+                getAllRepos(nl)
+            } else{     
+                   out.children = stars
+                   response.send(out)
+            }   
+        }
+    })
+
+
+}
+
+
+    getAllRepos(url)
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

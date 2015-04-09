@@ -5,10 +5,12 @@ block content
             div(class="col")
                 h1 Github repo map
             div(class="col")
-                form(class="form")
-                    input(type="text" placeholder="username" class="input")
-                    button(type="button" class="btn btn-success" value="Success") Go 
+                form(class="form" id="userForm" action="/test")
+                    input(type="text" placeholder="username" class="input" id="username" value="lastlegion")
+                    input(type="Submit" class="btn btn-success" value="Go" id="Go") 
 
         div(class="row")
             div(id="display")
             
+
+    div(class="modal") Loading...
